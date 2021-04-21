@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
@@ -14,10 +15,8 @@ public class BattleManager : MonoBehaviour
     public int currentPlayerAttack;
 
     [Header("Enemy")]
-    public int enemyHealth;
-    public int enemyMaxHealth;
-    public int enemyMinAttack;
-    public int enemyMaxAttack;
+    public Enemy currentEnemy;
+    public int currentEnemyHealth;
     public int currentEnemyAttack;
 
     [Header("UI")]
@@ -28,7 +27,7 @@ public class BattleManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        currentEnemyHealth = currentEnemy.enemyMaxHealth;
     }
 
     // Update is called once per frame
@@ -36,8 +35,14 @@ public class BattleManager : MonoBehaviour
     {
         playerHealthText.text = "Player HP " + playerHealth.playerHealth.ToString()
             + "/" + playerHealth.maxHealth.ToString();
-        enemyHealthText.text = "Enemy HP " + enemyHealth.ToString()
-            + "/" + enemyMaxHealth.ToString();
+        enemyHealthText.text = "Enemy HP " + currentEnemyHealth.ToString()
+            + "/" + currentEnemy.enemyMaxHealth.ToString();
+
+        if(currentEnemyHealth < 0)
+        {
+            currentEnemyHealth = 0;
+            StartCoroutine(EnemyDied());
+        }
     }
 
     public void PlayerAttack()
@@ -47,7 +52,7 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator PlayerAttacking()
     {
-        enemyHealth -= currentPlayerAttack;
+        currentEnemyHealth -= currentPlayerAttack;
         currentPlayerAttack = Random.Range(basicMinAttack, basicMaxAttack)
             + Random.Range(itemMinAttack, itemMaxAttack);
 
@@ -60,12 +65,19 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator EnemyAttacking()
     {
-        currentEnemyAttack = Random.Range(enemyMinAttack, enemyMaxAttack);
+        currentEnemyAttack = Random.Range(currentEnemy.enemyMinAttack, currentEnemy.enemyMaxAttack);
         playerHealth.playerHealth -= currentEnemyAttack;
-        dialogText.text = "Enemy attacked for " + currentEnemyAttack + " damage!";
+        dialogText.text = currentEnemy.enemyName + " attacked for " + currentEnemyAttack + " damage!";
         yield return new WaitForSeconds(3);
         dialogText.text = "";
     }
 
-
+    IEnumerator EnemyDied()
+    {
+        dialogText.text = currentEnemy.enemyName + " died!";
+        yield return new WaitForSeconds(2);
+        dialogText.text = "You won! Hooray!";
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadScene("Overworld");
+    }
 }

@@ -315,7 +315,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Dialog
+  m_Text: 
 --- !u!222 &587407487
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -826,10 +826,8 @@ MonoBehaviour:
   itemMinAttack: 6
   itemMaxAttack: 12
   currentPlayerAttack: 0
-  enemyHealth: 50
-  enemyMaxHealth: 120
-  enemyMinAttack: 3
-  enemyMaxAttack: 6
+  currentEnemy: {fileID: 11400000, guid: 17949ccec9bb5e74c83627e70e0c1747, type: 2}
+  currentEnemyHealth: 0
   currentEnemyAttack: 0
   playerHealthText: {fileID: 257121318}
   enemyHealthText: {fileID: 69914457}
